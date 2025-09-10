@@ -64,3 +64,48 @@ if st.session_state.rooms:
     st.download_button("⬇️ Download CSV", data=csv, file_name="paint_estimate.csv", mime="text/csv")
 else:
     st.info("No rooms yet. Add one above to begin.")
+
+def delete_room(rooms):
+    if not rooms:
+        print("No rooms to delete.\n")
+        return rooms
+
+    print("\nCurrent rooms:")
+    for i, r in enumerate(rooms, 1):
+        print(f"{i}. {r.name} | {r.area_all_coats:.1f} sq ft (with coats)")
+    print("")
+
+    try:
+        idx = int(input("Enter the number of the room to delete: "))
+        if 1 <= idx <= len(rooms):
+            removed = rooms.pop(idx - 1)
+            print(f"✓ Removed room: {removed.name}\n")
+        else:
+            print("Invalid number.\n")
+    except ValueError:
+        print("Please enter a valid integer.\n")
+
+    return rooms
+
+def main():
+    rooms = []
+    while True:
+        print("=== Paint Estimator ===")
+        print("[A]dd room   [L]ist rooms   [E]xport CSV   [D]elete room   [Q]uit")
+        choice = input("Choose: ").strip().lower()
+
+        if choice == "a":
+            r = add_room()
+            if r:
+                rooms.append(r)
+        elif choice == "l":
+            list_rooms(rooms)
+        elif choice == "e":
+            export_csv(rooms)
+        elif choice == "d":
+            rooms = delete_room(rooms)
+        elif choice == "q":
+            print("Goodbye!")
+            break
+        else:
+            print("Invalid option.\n")
